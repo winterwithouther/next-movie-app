@@ -1,7 +1,16 @@
-import { tmdb } from "./tmdb";
+
 import { Movie } from "./types";
+const API_KEY = process.env.API_KEY
 
 export async function getPopularMovies(): Promise<Movie[]> {
-    const res = await tmdb.get("/movie/popular");
-    return res.data.results;
+    const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+    
+    if (!res.ok) {
+        throw new Error(`failed to fetch popular movies: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.results as Movie[];
 }
+
+
